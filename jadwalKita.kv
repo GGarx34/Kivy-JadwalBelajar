@@ -1,0 +1,525 @@
+#:import get_color_from_hex kivy.utils.get_color_from_hex
+
+# --- Definisi Warna & Font ---
+#:set FONT_NAME 'FredokaOne'
+#:set COLOR_BG get_color_from_hex('#F9FAFB')
+#:set COLOR_PRIMARY get_color_from_hex('#2563EB')
+#:set COLOR_TEXT get_color_from_hex('#111827')
+#:set COLOR_TEXT_LIGHT get_color_from_hex('#6B7280')
+#:set COLOR_WHITE get_color_from_hex('#FFFFFF')
+#:set COLOR_DANGER get_color_from_hex('#DC2626')
+#:set COLOR_SUCCESS get_color_from_hex('#16A34A')
+#:set COLOR_TODAY_BG get_color_from_hex('#DBEAFE')
+#:set COLOR_BORDER get_color_from_hex('#D1D5DB')
+#:set COLOR_JADWAL_ITEM_BG get_color_from_hex('#F3F4F6')
+#:set COLOR_MAPEL get_color_from_hex('#E0E7FF')
+#:set COLOR_EKSKUL get_color_from_hex('#FEF9C3')
+#:set COLOR_LAINNYA get_color_from_hex('#E5E7EB')
+
+# --- Root Widget (ScreenManager) ---
+ScreenManager:
+    LoginScreen:
+        name: 'login'
+    MainScreen:
+        name: 'main'
+
+<LoginScreen>:
+    canvas.before:
+        Color:
+            rgba: COLOR_BG
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(40)
+        spacing: dp(20)
+        Label:
+            text: 'Jadwal Pelajaran'
+            font_name: FONT_NAME
+            font_size: '36sp'
+            color: COLOR_PRIMARY
+            size_hint_y: 0.4
+        Label:
+            id: error_label
+            text: 'Username atau password salah!'
+            color: COLOR_DANGER
+            size_hint_y: None
+            height: self.texture_size[1]
+            opacity: 0
+        TextInput:
+            id: username_input
+            hint_text: 'Username'
+            font_name: FONT_NAME
+            font_size: '18sp'
+            multiline: False
+            halign: 'center'
+            size_hint_y: None
+            height: dp(50)
+            padding: [dp(15), (self.height - self.line_height) / 2]
+            background_color: 0,0,0,0
+            canvas.before:
+                Color:
+                    rgba: COLOR_WHITE
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(10)]
+                Color:
+                    rgba: COLOR_PRIMARY if self.focus else COLOR_BORDER
+                Line:
+                    width: 1.5
+                    rounded_rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1], dp(10)
+        TextInput:
+            id: password_input
+            hint_text: 'Password'
+            password: True
+            font_name: FONT_NAME
+            font_size: '18sp'
+            multiline: False
+            halign: 'center'
+            size_hint_y: None
+            height: dp(50)
+            padding: [dp(15), (self.height - self.line_height) / 2]
+            background_color: 0,0,0,0
+            canvas.before:
+                Color:
+                    rgba: COLOR_WHITE
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(10)]
+                Color:
+                    rgba: COLOR_PRIMARY if self.focus else COLOR_BORDER
+                Line:
+                    width: 1.5
+                    rounded_rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1], dp(10)
+        Widget:
+            size_hint_y: 0.1
+        Button:
+            text: 'Login'
+            font_name: FONT_NAME
+            size_hint_y: None
+            height: dp(50)
+            background_color: COLOR_PRIMARY
+            background_normal: ''
+            on_release: root.login()
+        Widget:
+            size_hint_y: 0.2
+
+<MainScreen>:
+    BoxLayout:
+        id: main_layout
+        orientation: 'vertical'
+        canvas.before:
+            Color:
+                rgba: COLOR_BG
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        BoxLayout:
+            size_hint_y: None
+            height: dp(60)
+            padding: [dp(15), 0]
+            Label:
+                text: f"Halo {app.current_user.nama if app.current_user else ''}"
+                font_name: FONT_NAME
+                font_size: '22sp'
+                color: COLOR_TEXT
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.size
+            Label:
+                text: f"({app.current_user.role if app.current_user else ''})"
+                font_name: FONT_NAME
+                font_size: '16sp'
+                color: COLOR_TEXT_LIGHT
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.size
+            Button:
+                text: "Logout"
+                font_name: FONT_NAME
+                size_hint_x: None
+                width: dp(90)
+                background_color: COLOR_DANGER
+                on_release: app.logout()
+        ScrollView:
+            id: scroll_utama
+            bar_width: dp(5)
+            bar_color: COLOR_PRIMARY
+            GridLayout:
+                id: layout_utama
+                cols: 1
+                spacing: dp(15)
+                padding: dp(15)
+                size_hint_y: None
+                height: self.minimum_height
+
+<LihatHari>:
+    group: 'hari'
+    background_normal: ''
+    background_down: ''
+    background_color: 0,0,0,0
+    
+    orientation: 'vertical'
+    size_hint_y: None
+    height: self.minimum_height
+    padding: dp(12)
+    
+    canvas.before:
+        Color:
+            rgba: COLOR_TODAY_BG if self.state == 'down' else COLOR_WHITE
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(12)]
+        Color:
+            rgba: COLOR_PRIMARY if self.state == 'down' else COLOR_BORDER
+        Line:
+            width: 1.5 if self.state == 'down' else 1.2
+            rounded_rectangle: self.x, self.y, self.width, self.height, dp(12)
+            
+    BoxLayout:
+        size_hint_y: None
+        height: dp(40)
+        Label:
+            text: root.namaHari.upper()
+            font_name: FONT_NAME
+            font_size: '20sp' if root.hariIni else '18sp'
+            bold: True
+            color: COLOR_TEXT
+            halign: 'left'
+            valign: 'middle'
+            text_size: self.size
+        Label:
+            text: "(HARI INI)" if root.hariIni else ""
+            font_name: FONT_NAME
+            font_size: '18sp'
+            color: COLOR_PRIMARY
+            halign: 'left'
+            valign: 'middle'
+            text_size: self.size
+            opacity: 1 if root.hariIni else 0
+        Button:
+            text: "TAMBAH"
+            font_name: FONT_NAME
+            size_hint_x: None
+            width: dp(100)
+            background_color: COLOR_SUCCESS
+            on_release: root.bukaTambahPopup()
+            opacity: 1 if root.is_guru else 0
+            disabled: not root.is_guru
+            
+    GridLayout:
+        id: grid_jadwal
+        cols: 1
+        spacing: dp(10)
+        padding: [0, dp(10), 0, 0]
+        size_hint_y: None
+        height: self.minimum_height if root.state == 'down' else 0
+        opacity: 1 if root.state == 'down' else 0
+
+<DaftarJadwal>:
+    size_hint_y: None
+    # Biarkan tinggi total dihitung otomatis oleh isinya
+    height: self.minimum_height
+    padding: dp(5)
+    canvas.before:
+        Color:
+            rgba: COLOR_JADWAL_ITEM_BG
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(8)]
+    BoxLayout:
+        id: daftar_jadwal_content
+        # Beri tinggi minimum agar tidak kolaps
+        height: self.minimum_height
+        size_hint_y: None
+        padding: [dp(10), dp(5)]
+        spacing: dp(10)
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: dp(4)
+            size_hint_y: None
+            height: self.minimum_height
+
+            # =======================================================
+            # PERBAIKAN UTAMA ADA DI LABEL DI BAWAH INI
+            # =======================================================
+            Label:
+                text: root.data.get('aktivitas', 'N/A')
+                font_name: FONT_NAME
+                font_size: '17sp'
+                color: COLOR_TEXT
+                halign: 'left'
+                # 1. Batasi lebar teks, tapi biarkan tinggi dihitung otomatis
+                text_size: self.width, None
+                # 2. Instruksikan agar tinggi Label mengikuti tinggi teksnya
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            Label:
+                text: f"Ruang: {root.data.get('ruang', '-')}"
+                font_size: '13sp'
+                color: COLOR_TEXT_LIGHT
+                halign: 'left'
+                # Lakukan hal yang sama untuk label lain agar konsisten
+                text_size: self.width, None
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            Label:
+                text: f"Jam: {root.data.get('mulai', '00:00')} - {root.data.get('selesai', '00:00')}"
+                font_size: '13sp'
+                color: COLOR_TEXT_LIGHT
+                halign: 'left'
+                text_size: self.width, None
+                size_hint_y: None
+                height: self.texture_size[1]
+                
+            BoxLayout:
+                size_hint_y: None
+                height: dp(22)
+                padding: [0, dp(2)]
+                canvas.before:
+                    Color:
+                        rgba: (COLOR_MAPEL if root.data.get('kategori') == 'Mata Pelajaran' else (COLOR_EKSKUL if root.data.get('kategori') == 'Ekstrakurikuler' else COLOR_LAINNYA))
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(5)]
+                Label:
+                    text: root.data.get('kategori', 'Lainnya')
+                    font_size: '11sp'
+                    bold: True
+                    color: COLOR_TEXT
+                    size_hint_x: None
+                    width: self.texture_size[0] + dp(20)
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_x: None
+            width: dp(70)
+            spacing: dp(5)
+            opacity: 1 if root.is_guru else 0
+            disabled: not root.is_guru
+            Button:
+                text: "EDIT"
+                font_name: FONT_NAME
+                font_size: '12sp'
+                on_release: root.editItem()
+            Button:
+                text: "HAPUS"
+                font_name: FONT_NAME
+                background_color: COLOR_DANGER
+                font_size: '12sp'
+                on_release: root.hapusItem()
+
+<TambahJadwalPopup>:
+    size_hint: 0.9, 0.8
+    auto_dismiss: False
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(20)
+        spacing: dp(12)
+        canvas.before:
+            Color:
+                rgba: COLOR_BG
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Label:
+            text: f"{'Edit' if root.item_id else 'Tambah'} Jadwal Hari {root.namaHari}"
+            font_name: FONT_NAME
+            font_size: '22sp'
+            color: COLOR_PRIMARY
+            size_hint_y: None
+            height: self.texture_size[1]
+        
+        BoxLayout:
+            id: kategori_box
+            size_hint_y: None
+            height: dp(40)
+            spacing: dp(5)
+            Label:
+                text: "Kategori:"
+                size_hint_x: 0.4
+            ToggleButton:
+                text: "Mata Pelajaran"
+                group: "kategori"
+                state: 'down'
+                allow_no_selection: False
+                on_press: root.atur_kategori(self.text)
+            ToggleButton:
+                text: "Ekstrakurikuler"
+                group: "kategori"
+                allow_no_selection: False
+                on_press: root.atur_kategori(self.text)
+            ToggleButton:
+                text: "Lainnya"
+                group: "kategori"
+                allow_no_selection: False
+                on_press: root.atur_kategori(self.text)
+
+        TextInput:
+            id: aktifitas
+            hint_text: 'Nama Aktivitas (Contoh: Matematika)'
+            font_name: FONT_NAME
+            size_hint_y: None
+            height: dp(45)
+
+        TextInput:
+            id: ruang
+            hint_text: 'Ruang Kelas (Contoh: XI-A atau Lab IPA)'
+            font_name: FONT_NAME
+            size_hint_y: None
+            height: dp(45)
+        
+        BoxLayout:
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(10)
+            Button:
+                text: f"Mulai: {root.waktuMulai}"
+                on_release: root.showPilihWaktu('Mulai')
+            Button:
+                text: f"Selesai: {root.waktuSelesai}"
+                on_release: root.showPilihWaktu('Selesai')
+        Widget:
+            size_hint_y: 1.0
+        BoxLayout:
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(10)
+            Button:
+                text: 'Batal'
+                on_release: root.dismiss()
+                background_color: COLOR_TEXT_LIGHT
+            Button:
+                text: 'Simpan'
+                on_release: root.simpanJadwal()
+                background_color: COLOR_SUCCESS
+
+<PilihWaktuPopup>:
+    size_hint: 0.9, 0.45
+    auto_dismiss: False
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(20)
+        spacing: dp(10)
+        canvas.before:
+            Color:
+                rgba: COLOR_WHITE
+            RoundedRectangle:
+                size: self.size
+                pos: self.pos
+                radius: [dp(12)]
+        Label:
+            text: 'Pilih Waktu'
+            font_name: FONT_NAME
+            size_hint_y: None
+            height: self.texture_size[1]
+            color: COLOR_TEXT
+            font_size: '20sp'
+        BoxLayout:
+            spacing: dp(15)
+            BoxLayout:
+                orientation: 'vertical'
+                Label:
+                    text: 'Jam'
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                BoxLayout:
+                    size_hint_y: None
+                    height: dp(50)
+                    Button:
+                        text: '<'
+                        size_hint_x: 0.3
+                        on_release: root.ubahWaktu('Jam', -1)
+                    TextInput:
+                        id: jam_input
+                        text: root.jam
+                        font_name: FONT_NAME
+                        font_size: '28sp'
+                        halign: 'center'
+                        valign: 'middle'
+                        input_filter: 'int'
+                        multiline: False
+                    Button:
+                        text: '>'
+                        size_hint_x: 0.3
+                        on_release: root.ubahWaktu('Jam', 1)
+            BoxLayout:
+                orientation: 'vertical'
+                Label:
+                    text: 'Menit'
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                BoxLayout:
+                    size_hint_y: None
+                    height: dp(50)
+                    Button:
+                        text: '<'
+                        size_hint_x: 0.3
+                        on_release: root.ubahWaktu('Menit', -1)
+                    TextInput:
+                        id: menit_input
+                        text: root.menit
+                        font_name: FONT_NAME
+                        font_size: '28sp'
+                        halign: 'center'
+                        valign: 'middle'
+                        input_filter: 'int'
+                        multiline: False
+                    Button:
+                        text: '>'
+                        size_hint_x: 0.3
+                        on_release: root.ubahWaktu('Menit', 1)
+        Widget:
+            size_hint_y: 1.0
+        BoxLayout:
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(10)
+            Button:
+                text: 'Batal'
+                on_release: root.dismiss()
+            Button:
+                text: 'Setel'
+                on_release: root.setWaktu()
+                background_color: COLOR_PRIMARY
+
+<KonfirmasiPopup>:
+    size_hint: 0.8, 0.4
+    auto_dismiss: False
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(20)
+        spacing: dp(15)
+        canvas.before:
+            Color:
+                rgba: COLOR_WHITE
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [dp(12)]
+        Label:
+            text: 'Yakin ingin menghapus jadwal ini?'
+            color: COLOR_TEXT
+            font_size: '16sp'
+            text_size: self.width, None
+            halign: 'center'
+            valign: 'middle'
+        BoxLayout:
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(10)
+            Button:
+                text: "Batal"
+                on_release: root.dismiss()
+                background_color: COLOR_TEXT_LIGHT
+            Button:
+                text: "Hapus"
+                background_color: COLOR_DANGER
+                on_release: root.konfirmasiHapus()
