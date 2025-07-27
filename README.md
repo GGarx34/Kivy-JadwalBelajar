@@ -5,20 +5,20 @@ JadwalKita adalah aplikasi desktop sederhana yang dibangun dengan Python dan Kiv
 ## Fitur Utama
 
 * **Sistem Login Berbasis Peran**: Aplikasi memiliki dua peran pengguna:
-    * [cite_start]**Guru**: Dapat melihat, menambah, mengedit, dan menghapus jadwal[cite: 26, 39, 66, 67, 68].
-    * [cite_start]**Siswa**: Hanya dapat melihat jadwal yang sudah ada[cite: 25, 27, 39, 66].
+    * **Guru**: Dapat melihat, menambah, mengedit, dan menghapus jadwal
+    * **Siswa**: Hanya dapat melihat jadwal yang sudah ada
 
 * **Tampilan Jadwal Harian**:
-    * [cite_start]Jadwal ditampilkan per hari dari Senin hingga Minggu[cite: 22, 60].
-    * [cite_start]Widget untuk hari ini ("HARI INI") akan disorot secara otomatis[cite: 24, 60].
-    * [cite_start]Setiap hari dapat diperluas atau diciutkan untuk menampilkan atau menyembunyikan detail jadwal[cite: 27].
+    * Jadwal ditampilkan per hari dari Senin hingga Minggu
+    * Widget untuk hari ini ("HARI INI") akan disorot secara otomatis
+    * Setiap hari dapat diperluas atau diciutkan untuk menampilkan atau menyembunyikan detail jadwal
 
-* **Manajemen Jadwal (Khusus Guru)**:
-    * [cite_start]Menambah entri jadwal baru dengan kategori "Mata Pelajaran", "Ekstrakurikuler", atau "Lainnya"[cite: 44, 45, 46, 47, 63].
-    * [cite_start]Mengedit detail jadwal yang ada seperti aktivitas, ruang, dan waktu[cite: 68].
-    * [cite_start]Menghapus entri jadwal dari daftar[cite: 67].
+* **Manajemen Jadwal (Khusus Guru)**
+    * Menambah entri jadwal baru dengan kategori "Mata Pelajaran", "Ekstrakurikuler", atau "Lainnya"
+    * Mengedit detail jadwal yang ada seperti aktivitas, ruang, dan waktu
+    * Menghapus entri jadwal dari daftar
 
-* [cite_start]**Pembaruan Data Otomatis**: Aplikasi secara otomatis akan memuat ulang jadwal jika mendeteksi ada perubahan pada file `data.json`, memungkinkan pembaruan data antar pengguna tanpa perlu me-restart aplikasi[cite: 52, 53].
+* **Pembaruan Data Otomatis**: Aplikasi secara otomatis akan memuat ulang jadwal jika mendeteksi ada perubahan pada file `data.json`, memungkinkan pembaruan data antar pengguna tanpa perlu me-restart aplikasi.
 
 ## Masalah yang Diketahui (Known Issues)
 
@@ -28,7 +28,7 @@ JadwalKita adalah aplikasi desktop sederhana yang dibangun dengan Python dan Kiv
 ## Teknologi
 
 * **Bahasa Pemrograman**: Python
-* [cite_start]**Framework**: Kivy [cite: 73]
+* **Framework**: Kivy
 * **Format Data**: JSON
 
 ## Instalasi
